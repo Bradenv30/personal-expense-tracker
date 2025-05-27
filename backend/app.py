@@ -1,29 +1,16 @@
-from flask import Flask, jsonify, request
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+from config import Config
 
+# Configure app with the config class that has database URI.
+# Create instance of SQLAlc that connects to DB config
 app = Flask(__name__)
+app.config.from_object(Config)
+db = SQLAlchemy(app)
 
-#Store data in variables for in memory testing
-expenses = []
-budget = {"monthly limit": 500}
-expenses_type = ["Subscription", "Travel/Transportation", "Food", "Entertainment", "Bills/Utilities", "Groceries/Neccesities"]
-expense1 = {
-    "id": 1,
-    "amount": 25,
-    "type": "Entertainment",
-    "description": "Went to the movies",
-    "date" : "05/25/2025",
-}
-expenses.append(expense1)
 
-#Set up home page route
-@app.route('/', methods=['GET'])
-def home():
-    return "<p>Hello!<p>"
-    
-#Create a route for 'budget' that displays the current values in budget
-@app.route('/budget', methods=['GET'])
-def get_budget():
-    return jsonify(budget)
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
