@@ -1,35 +1,36 @@
-from app import db
 from sqlalchemy import CheckConstraint
 from datetime import datetime
 
 
 # Create tables for expenses and budget
-class Expenses(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(15))
-    amount = db.Column(db.Numeric(10,2), nullable=False)
-    date = db.Column(db.Date)
-    description = db.Column(db.Text)
-    type = db.Column(db.String(50))
+def init_models(db):
+    class Expenses(db.Model):
+        id = db.Column(db.Integer, primary_key=True)
+        name = db.Column(db.String(15))
+        amount = db.Column(db.Numeric(10,2), nullable=False)
+        date = db.Column(db.Date)
+        description = db.Column(db.Text)
+        type = db.Column(db.String(50))
     
-    __table_args__ = (
-        CheckConstraint("amount >= 0", name="check_amount_not_negative"),
-        CheckConstraint(
+        __table_args__ = (
+            CheckConstraint("amount >= 0", name="check_amount_not_negative"),
+            CheckConstraint(
             "type IN ('Subscription', 'Transportation', 'Food', 'Entertainment', 'Bills/Utilities', 'Groceries/Necessities', 'Vacation', 'Other')",
             name="check_valid_type"
+            )
         )
-    )
     
-class Budget(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(15))
-    amount = db.Column(db.Numeric(10,2), nullable=False)
-    is_active = db.Column(db.Boolean, nullable=False, default=True)
-    start_date = db.Column(db.Date)
-    end_date = db.Column(db.Date)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    class Budget(db.Model):
+        id = db.Column(db.Integer, primary_key=True)
+        name = db.Column(db.String(15))
+        amount = db.Column(db.Numeric(10,2), nullable=False)
+        is_active = db.Column(db.Boolean, nullable=False, default=True)
+        start_date = db.Column(db.Date)
+        end_date = db.Column(db.Date)
+        created_at = db.Column(db.DateTime, default=datetime.utcnow)
+        updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
+    return Expenses, Budget
 
 
 
