@@ -29,6 +29,10 @@ def init_models(db):
         end_date = db.Column(db.Date)
         created_at = db.Column(db.DateTime, default=datetime.utcnow)
         updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+        
+        __table_args__ = (
+            CheckConstraint("amount >= 0", name="check_amount_not_negative"),
+        )
     
     return Expenses, Budget
 
