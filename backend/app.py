@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from config import Config
+from flask_cors import CORS
 
 #MAKE SURE YOU UPDATE THE RESPONSES IN CRUD ROUTES TO RETURN JSON
 
@@ -8,6 +9,7 @@ from config import Config
 # Create instance of SQLAlch that connects to app/DB config
 app = Flask(__name__)
 app.config.from_object(Config)
+CORS(app)
 db = SQLAlchemy(app)
 
 from model import init_models
