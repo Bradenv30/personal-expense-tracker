@@ -1,9 +1,14 @@
-import { useState } from "react";
-
-import "./App.css";
+import { Routes, Route } from "react-router-dom";
+import Start from "./pages/start";
+import Dashboard from "./pages/dashboard";
 
 function App() {
-  return <h1>Hi Abigail</h1>;
+  return (
+    <Routes>
+      <Route path="/" element={<Start />} />
+      <Route path="/dashboard" element={<Dashboard />} />
+    </Routes>
+  );
 }
 
 export default App;
