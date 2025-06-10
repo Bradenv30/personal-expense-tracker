@@ -23,7 +23,7 @@ def home():
 # Route to view all Expenses
 @app.route('/expenses', methods=['GET'])
 def getExpenses():
-    expenses = Expenses.query.all()
+    expenses = Expenses.query.order_by(Expenses.id.desc()).all()
     expenses_list = [{
         "id": exp.id,
         "name": exp.name,
@@ -51,10 +51,18 @@ def createExpense():
         new_expense = Expenses(name=name1, amount=amount1, date=date1, description=description1, type=type1)
         db.session.add(new_expense)
         db.session.commit()
-        return "Successfully Added!"
+        
+        return jsonify({
+            "id": new_expense.id,
+            "name": new_expense.name,
+            "amount": str(new_expense.amount),
+            "date": new_expense.date,
+            "description":new_expense.description,
+            "type": new_expense.type
+        }), 201
     except:
         db.session.rollback()
-        return "Error. Could not add to database"
+        return jsonify({"Error":  "Could not add to database"}), 500
         
 # Route to view one expense
 @app.route('/expenses/<int:id>', methods=['GET'])
@@ -119,7 +127,7 @@ def updateExpField(id):
     expense = Expenses.query.get(id)
     
     if not expense:
-        return "Not a valid expense"
+        return jsonify({"error": "Not a valid expense"}), 404
         
     data = request.get_json()
     
@@ -129,10 +137,18 @@ def updateExpField(id):
     
     try:
         db.session.commit()
-        return "Successfully updated"
+        return jsonify({
+            "id": expense.id,
+            "name": expense.name,
+            "amount": str(expense.amount),
+            "date": expense.date,
+            "description": expense.description,
+            "type": expense.type
+        }), 200
+
     except:
         db.session.rollback()
-        return "Error updating"
+        return jsonify({"error": "Error updating"}), 500
     
 
 # BUDGET METHODS
