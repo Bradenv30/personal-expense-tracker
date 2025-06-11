@@ -21,7 +21,7 @@ User, Expenses, Budget = init_models(db)
 # Define API routes to interact with Expenses and Budget databases
 @app.route('/')
 def home():
-    return "You are on the homepage"
+    return jsonify({"message": "You are on the homepage"})
 
 # Route to view all Expenses
 @app.route('/expenses', methods=['GET'])
@@ -88,14 +88,15 @@ def get_expense_by_id(id):
 def deleteExpense(id):
     expense = Expenses.query.get(id)
     if not expense:
-        return "Error, not a valid expense"
+        return jsonify({"error": "Error, not a valid expense"}), 404
     try:
         db.session.delete(expense)
         db.session.commit()
-        return "Successfully removed!"
+        return jsonify({"message": "Successfully removed!"}), 200
     except:
         db.session.rollback()
-        return "Error. Could not remove from database"
+        return jsonify({"error": "Could not remove from database"}), 500
+
         
 # Route to update existing expense
 @app.route('/expenses/<int:id>', methods=['PUT'])
@@ -103,7 +104,8 @@ def updateExpense(id):
     expense = Expenses.query.get(id)
     
     if not expense:
-        return "Not a valid expense"
+        return jsonify({"error": "Not a valid expense"}), 404
+
     
     data = request.get_json()
     
@@ -120,10 +122,12 @@ def updateExpense(id):
         
     try:
         db.session.commit()
-        return "Successfully updated"
+        return jsonify({"message": "Successfully updated"}), 200
+
     except:
         db.session.rollback()
-        return "Error updating"
+        return jsonify({"error": "Error updating"}), 500
+
     
 @app.route('/expenses/<int:id>', methods=['PATCH'])
 def updateExpField(id):
@@ -186,17 +190,20 @@ def createBudget():
         new_budget = Budget(name=name1, amount=amount1, is_active=is_active1, start_date=start_date1, end_date=end_date1)
         db.session.add(new_budget)
         db.session.commit()
-        return "Successfully Added!"
+        return jsonify({"message": "Successfully added!"}), 201
+
     except:
         db.session.rollback()
-        return "Error. Could not add to database"
+        return jsonify({"error": "Could not add to database"}), 500
+
     
     
 @app.route('/budget/<int:id>', methods=['GET'])
 def getBudgetById(id):
     budget = Budget.query.get(id)
     if not budget:
-        return "Error, not found in database"
+        return jsonify({"error": "Not found in database"}), 404
+
     budget_dict = {
         "id": budget.id,
         "name": budget.name,
@@ -216,7 +223,8 @@ def updateBudget(id):
     budget = Budget.query.get(id)
     
     if not budget:
-        return "Not a valid expense"
+        return jsonify({"error": "Not a valid budget"}), 404
+
     
     data = request.get_json()
     
@@ -233,31 +241,31 @@ def updateBudget(id):
         
     try:
         db.session.commit()
-        return "Successfully updated"
+        return jsonify({"message": "Successfully updated"}), 200
     except:
         db.session.rollback()
-        return "Error updating"
+        return jsonify({"error": "Error updating"}), 500
     
     
 @app.route('/budget/<int:id>', methods=['DELETE'])
 def deleteBudget(id):
     budget = Budget.query.get(id)
     if not budget:
-        return "Error, not a valid expense"
+        return jsonify({"error": "Not a valid budget"}), 404
     try:
         db.session.delete(budget)
         db.session.commit()
-        return "Successfully removed!"
+        return jsonify({"message": "Successfully removed!"}), 200
     except:
         db.session.rollback()
-        return "Error. Could not remove from database"
+        return jsonify({"error": "Could not remove from database"}), 500
     
 @app.route('/budget/<int:id>', methods=['PATCH'])
 def updateBudField(id):
     budget = Budget.query.get(id)
     
     if not budget:
-        return "Not a valid expense"
+        return jsonify({"error": "Not a valid budget"}), 404
         
     data = request.get_json()
     
@@ -267,10 +275,10 @@ def updateBudField(id):
     
     try:
         db.session.commit()
-        return "Successfully updated"
+        return jsonify({"message": "Successfully updated"}), 200
     except:
         db.session.rollback()
-        return "Error updating"
+        return jsonify({"error": "Error updating"}), 500
     
     
 if __name__ == '__main__':
