@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from config import Config
 from flask_cors import CORS
+from flask_migrate import Migrate
 
 #MAKE SURE YOU UPDATE THE RESPONSES IN CRUD ROUTES TO RETURN JSON
 
@@ -12,8 +13,10 @@ app.config.from_object(Config)
 CORS(app)
 db = SQLAlchemy(app)
 
+migrate = Migrate(app, db)
+
 from model import init_models
-Expenses, Budget = init_models(db)
+User, Expenses, Budget = init_models(db)
 
 # Define API routes to interact with Expenses and Budget databases
 @app.route('/')
@@ -150,6 +153,7 @@ def updateExpField(id):
         db.session.rollback()
         return jsonify({"error": "Error updating"}), 500
     
+
 
 # BUDGET METHODS
 
