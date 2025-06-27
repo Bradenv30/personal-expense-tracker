@@ -52,7 +52,7 @@ class Budget(db.Model):
         
         #Relationship to User
         user = db.relationship("User", back_populates="budgets")
-        #Relationship to Expenses (Budget parent)
+        #Relationship to Expenses (Budget is parent)
         expenses = db.relationship("Expenses", back_populates="budget")
         
         __table_args__ = (
