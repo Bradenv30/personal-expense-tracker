@@ -36,28 +36,28 @@ export default function AddExpenseForm({ onClose, setExpenses, budgetID }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-gray-800 p-6 rounded-xl shadow-xl w-full max-w-md text-white">
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <h2 className="text-2xl font-bold text-white">Add Expense</h2>
+    <div className="fixed inset-0 bg-overlay backdrop-blur-sm flex items-center justify-center z-50">
+      <div className="bg-surface-white backdrop-blur-sm p-8 rounded-2xl shadow-2xl w-full max-w-md">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <h2 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary to-accent text-transparent bg-clip-text text-center mb-6">Add New Expense</h2>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-300">Name</label>
+            <label className="block text-sm font-semibold text-neutral mb-2">Expense Name (optional)</label>
             <input
               type="text"
-              placeholder="Optional"
-              className="w-full border border-gray-600 bg-gray-700 text-white rounded px-3 py-2"
+              placeholder="Coffee, Gas, etc."
+              className="w-full px-4 py-3 border border-neutral-light rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-300">Amount</label>
+            <label className="block text-sm font-semibold text-neutral mb-2">Amount (required)</label>
             <input
               type="number"
-              placeholder="Required"
-              className="w-full border border-gray-600 bg-gray-700 text-white rounded px-3 py-2"
+              placeholder="25.99"
+              className="w-full px-4 py-3 border border-neutral-light rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               required
@@ -65,24 +65,23 @@ export default function AddExpenseForm({ onClose, setExpenses, budgetID }) {
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-300">Date</label>
+            <label className="block text-sm font-semibold text-neutral mb-2">Date (optional)</label>
             <input
               type="date"
-              placeholder="Optional"
-              className="w-full border border-gray-600 bg-gray-700 text-white rounded px-3 py-2"
+              className="w-full px-4 py-3 border border-neutral-light rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               value={date}
               onChange={(e) => setDate(e.target.value)}
             />
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-300">Type</label>
+            <label className="block text-sm font-semibold text-neutral mb-2">Category (optional)</label>
             <select
               value={type}
               onChange={(e) => setType(e.target.value)}
-              className="w-full border border-gray-600 bg-gray-700 text-white rounded px-3 py-2"
+              className="w-full px-4 py-3 border border-neutral-light rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
             >
-              <option value="">Select Type (optional)</option>
+              <option value="">Select Category</option>
               <option value="Food">Food</option>
               <option value="Transportation">Transportation</option>
               <option value="Subscription">Subscription</option>
@@ -97,32 +96,32 @@ export default function AddExpenseForm({ onClose, setExpenses, budgetID }) {
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-300">
-              Description
+            <label className="block text-sm font-semibold text-neutral mb-2">
+              Description (optional)
             </label>
             <textarea
-              placeholder="Details or notes... (optional)"
-              className="w-full border border-gray-600 bg-gray-700 text-white rounded px-3 py-2"
+              placeholder="Additional details or notes..."
+              className="w-full px-4 py-3 border border-neutral-light rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
               rows="3"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
           </div>
 
-          <div className="flex justify-end pt-4 gap-2">
+          <div className="flex justify-end gap-3 pt-6">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded bg-gray-600 hover:bg-gray-500 text-white text-sm"
+              className="px-6 py-3 rounded-xl bg-neutral-light hover:bg-neutral-light/70 text-neutral font-semibold transition-colors duration-200"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 rounded bg-indigo-600 hover:bg-indigo-700 text-white text-sm"
+              className="px-6 py-3 rounded-xl bg-gradient-to-r from-accent to-primary text-light font-semibold shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105"
               disabled={loading}
             >
-              {loading ? "Saving..." : "Save"}
+              {loading ? "Adding..." : "Add Expense"}
             </button>
           </div>
         </form>

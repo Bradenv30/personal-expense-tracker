@@ -20,15 +20,15 @@ export default function ExpenseList({
     }).format(num);
   };
   return (
-    <section className="h-full flex flex-col overflow-y-auto scrollbar-blue bg-pastelgray p-6 shadow-md text-white">
-      <h2 className="text-black text-xl font-semibold mb-4 flex items-center gap-4">
+    <section className="h-full flex flex-col overflow-y-auto scrollbar-blue bg-surface-white backdrop-blur-sm p-6 shadow-2xl rounded-2xl">
+      <h2 className="text-xl font-semibold mb-4 flex items-center gap-4 bg-gradient-to-r from-primary to-accent text-transparent bg-clip-text">
         Expenses
         {allExpenses.length > 0 && (
           <>
             <select
               value={sortName}
               onChange={(e) => setSortName(e.target.value)}
-              className="bg-vanillaice text-sm text-black px-2 py-1 rounded-md focus:outline-none"
+              className="bg-surface-light border border-neutral-light text-sm text-neutral px-3 py-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
             >
               <option value="">Sort By Name</option>
               <option value="name-asc">Name A–Z</option>
@@ -38,7 +38,7 @@ export default function ExpenseList({
             <select
               value={sortAmount}
               onChange={(e) => setSortAmount(e.target.value)}
-              className="bg-vanillaice text-sm text-black px-2 py-1 rounded-md focus:outline-none"
+              className="bg-surface-light border border-neutral-light text-sm text-neutral px-3 py-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
             >
               <option value="">Sort By Amount</option>
               <option value="amount-lowest">Lowest - Highest</option>
@@ -48,7 +48,7 @@ export default function ExpenseList({
             <select
               value={sortDate}
               onChange={(e) => setSortDate(e.target.value)}
-              className="bg-vanillaice text-sm text-black px-2 py-1 rounded-md focus:outline-none"
+              className="bg-surface-light border border-neutral-light text-sm text-neutral px-3 py-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
             >
               <option value="">Sort By Date</option>
               <option value="date-newest">Newest - Oldest</option>
@@ -57,7 +57,7 @@ export default function ExpenseList({
             <select
               value={sortType}
               onChange={(e) => setSortType(e.target.value)}
-              className="bg-vanillaice text-sm text-black px-2 py-1 rounded-md focus:outline-none"
+              className="bg-surface-light border border-neutral-light text-sm text-neutral px-3 py-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
             >
               <option value="">Sort By Type</option>
               <option value="Food">Food</option>
@@ -79,9 +79,9 @@ export default function ExpenseList({
                   setSortDate("");
                   setSortType("");
                 }}
-                className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm px-2 py-1 rounded-md border border-indigo-700 transition"
+                className="bg-secondary/80 hover:bg-secondary active:scale-95 transform transition duration-200 text-light text-sm px-3 py-2 rounded-xl border border-secondary shadow-lg"
               >
-                Undo Filters
+                Clear Filters
               </button>
             )}
           </>
@@ -89,23 +89,23 @@ export default function ExpenseList({
       </h2>
 
       {expenses.length === 0 ? (
-        <div className="h-full flex items-center justify-center text-gray-400">
-          No expenses!
+        <div className="h-full flex items-center justify-center text-neutral">
+          No expenses yet! Add your first expense above.
         </div>
       ) : (
         <ul className="space-y-2">
           {expenses.map((expense) => (
             <li
               key={expense.id}
-              className="bg-vanillaice p-4 rounded-lg flex justify-between items-start"
+              className="bg-surface-white border border-neutral-light p-4 rounded-xl shadow-sm hover:shadow-md transition duration-200 flex justify-between items-start"
             >
               {/* Left: Expense Name */}
               <div className="flex items-center gap-2 flex-wrap">
-                <p className="text-base font-semibold text-black">
+                <p className="text-base font-semibold text-neutral">
                   {expense.name || "Unnamed Expense"}
                 </p>
                 {expense.type && (
-                  <span className="text-base italic text-gray-600">
+                  <span className="text-sm italic text-neutral px-2 py-1 bg-neutral-light rounded-full">
                     {expense.type}
                   </span>
                 )}
@@ -114,12 +114,12 @@ export default function ExpenseList({
               {/* Right: Amount + Edit + Type */}
               <div className="text-right flex flex-col items-end space-y-1">
                 <div className="flex items-center gap-4">
-                  <p className="text-lg font-bold text-black">
+                  <p className="text-lg font-bold text-neutral">
                     ${formatCurrency(expense.amount)}
                   </p>
                   <button
                     onClick={() => setEditingExpense(expense)}
-                    className="bg-lightorange text-white text-sm px-3 py-1 rounded-md hover:bg-orange-600 transition"
+                    className="bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 active:scale-95 transform transition duration-200 text-light text-sm px-3 py-2 rounded-xl shadow-lg"
                   >
                     Edit
                   </button>

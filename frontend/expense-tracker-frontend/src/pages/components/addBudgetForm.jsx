@@ -57,38 +57,40 @@ export default function AddBudgetForm({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-gray-800 p-6 rounded-xl shadow-xl w-full max-w-md text-white">
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <h2 className="text-2xl font-bold text-white">Add Budget</h2>
+    <div className="fixed inset-0 bg-overlay backdrop-blur-sm flex items-center justify-center z-50">
+      <div className="bg-surface-white backdrop-blur-sm p-8 rounded-2xl shadow-2xl w-full max-w-md">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <h2 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary to-accent text-transparent bg-clip-text text-center mb-6">Create New Budget</h2>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-300">
-              Name (optional)
+            <label className="block text-sm font-semibold text-neutral mb-2">
+              Budget Name (optional)
             </label>
             <input
               type="text"
-              className="w-full border border-gray-600 bg-gray-700 text-white rounded px-3 py-2"
+              className="w-full px-4 py-3 border border-neutral-light rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               value={name}
               onChange={(e) => setName(e.target.value)}
+              placeholder="My Budget"
             />
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-300">
-              Amount (required)
+            <label className="block text-sm font-semibold text-neutral mb-2">
+              Budget Amount (required)
             </label>
             <input
               type="number"
-              className="w-full border border-gray-600 bg-gray-700 text-white rounded px-3 py-2"
+              className="w-full px-4 py-3 border border-neutral-light rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
+              placeholder="1000"
               required
             />
           </div>
 
-          <div className="mt-4">
-            <label className="block text-base font-medium text-white mb-2">
+          <div className="space-y-3">
+            <label className="block text-sm font-semibold text-neutral mb-2">
               Budget Status
             </label>
             <div className="flex gap-6">
@@ -99,9 +101,9 @@ export default function AddBudgetForm({
                   value="active"
                   checked={isActive === true}
                   onChange={() => setIsActive(true)}
-                  className="w-5 h-5 accent-indigo-500"
+                  className="w-4 h-4 accent-success"
                 />
-                <span className="text-base text-white">Active</span>
+                <span className="text-sm text-neutral">Active</span>
               </label>
 
               <label className="flex items-center gap-3">
@@ -111,51 +113,51 @@ export default function AddBudgetForm({
                   value="inactive"
                   checked={isActive === false}
                   onChange={() => setIsActive(false)}
-                  className="w-5 h-5 accent-red-500"
+                  className="w-4 h-4 accent-error"
                 />
-                <span className="text-base text-white">Inactive</span>
+                <span className="text-sm text-neutral">Inactive</span>
               </label>
             </div>
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-300">
-              Start Date
+            <label className="block text-sm font-semibold text-neutral mb-2">
+              Start Date (optional)
             </label>
             <input
               type="date"
-              className="w-full border border-gray-600 bg-gray-700 text-white rounded px-3 py-2"
+              className="w-full px-4 py-3 border border-neutral-light rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
             />
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-300">
-              End Date
+            <label className="block text-sm font-semibold text-neutral mb-2">
+              End Date (optional)
             </label>
             <input
               type="date"
-              className="w-full border border-gray-600 bg-gray-700 text-white rounded px-3 py-2"
+              className="w-full px-4 py-3 border border-neutral-light rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
             />
           </div>
 
-          <div className="flex justify-end gap-2 pt-4">
+          <div className="flex justify-end gap-3 pt-6">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded bg-gray-600 hover:bg-gray-500 text-white text-sm"
+              className="px-6 py-3 rounded-xl bg-neutral-light hover:bg-neutral-light/70 text-neutral font-semibold transition-colors duration-200"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 rounded bg-indigo-600 hover:bg-indigo-700 text-white text-sm"
+              className="px-6 py-3 rounded-xl bg-gradient-to-r from-primary to-accent text-light font-semibold shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105"
               disabled={loading}
             >
-              {loading ? "Saving..." : "Save"}
+              {loading ? "Creating..." : "Create Budget"}
             </button>
           </div>
         </form>

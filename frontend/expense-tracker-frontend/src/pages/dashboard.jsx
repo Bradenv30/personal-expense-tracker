@@ -150,18 +150,18 @@ function Dashboard() {
   }, [budget]);
 
   if (isCheckingToken) {
-    return <div className="text-white p-8">Loading...</div>; // or null
+    return <div className="text-neutral p-8">Loading...</div>;
   }
 
   return (
     <>
-      <div className="flex h-screen bg-darkice overflow-hidden relative">
+      <div className="flex h-screen bg-amber-50 overflow-hidden relative">
         <SidebarNav
           collapsed={collapsed}
           onToggleCollapse={() => setCollapsed(!collapsed)}
         />
 
-        <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="flex-1 flex flex-col overflow-y-auto lg:overflow-hidden">
           <TopBar
             userName={userName}
             onAddClick={() => {
@@ -172,69 +172,50 @@ function Dashboard() {
                   "This budget is inactive. You cannot add expenses to it."
                 );
 
-                // Auto-clear after 3 seconds
                 setTimeout(() => setErrorMessage(""), 3000);
               }
             }}
             onAddBudgetClick={() => setShowBudgetForm(true)}
             onAccountClick={() => setShowAccountModal(true)}
             onReportClick={() => setShowReportModal(true)}
+            isReportsDisabled={!budget}
           />
           {errorMessage && (
-            <div className="bg-red-600 text-white px-4 py-2 text-sm text-center shadow">
+            <div className="bg-error text-white px-4 py-2 text-sm text-center shadow-2xl">
               {errorMessage}
             </div>
           )}
           <main
-            className={`flex flex-row flex-1 gap-5 p-4 overflow-hidden transition-all duration-300 ${
-              collapsed ? "ml-0" : "ml-64"
+            className={`flex flex-col lg:flex-row flex-1 gap-5 p-4 lg:overflow-hidden transition-all duration-300 ${
+              collapsed ? "ml-0" : "lg:ml-64"
             }`}
           >
-            {/* Left Column - Budget Panel */}
-            <div className="flex flex-col w-[520px] bg-pastelgray p-6 rounded-md">
+            <div className="flex flex-col w-full lg:w-[520px] bg-surface-white backdrop-blur-sm p-8 rounded-2xl shadow-2xl">
               {budgets.length > 0 && (
                 <div className="mb-1">
                   <label
                     htmlFor="budget-select"
-                    className="block text-sm text-black mb-1 font-[Verdana]"
+                    className="block text-sm text-neutral mb-2 font-semibold"
                   >
-                    Viewing:
+                    Viewing Budget:
                   </label>
                   <select
                     id="budget-select"
                     value={budget?.id || ""}
                     onChange={handleBudgetChange}
-                    className="w-full bg-vanillaice text-black text-sm px-3 py-2 rounded-lg font-[Verdana] shadow-sm focus:outline-none focus:ring-2 transition"
+                    className="w-full bg-white border border-neutral-light text-neutral px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent shadow-sm transition"
                   >
                     {budgets.map((b, index) => (
                       <option
                         key={b.id}
                         value={b.id}
-                        className="bg-gray-800 text-white"
+                        className="bg-white text-neutral"
                       >
                         {b.name}
                       </option>
                     ))}
                   </select>
                 </div>
-              )}
-
-              {showBudgetForm && (
-                <AddBudgetForm
-                  onClose={() => setShowBudgetForm(false)}
-                  setBudget={setBudget}
-                  setBudgets={setBudgets}
-                  budgets={budgets}
-                />
-              )}
-
-              {editingBudget && budget && (
-                <EditBudget
-                  budget={budget}
-                  onClose={() => setEditingBudget(false)}
-                  setBudget={setBudget}
-                  setBudgets={setBudgets}
-                />
               )}
 
               <BudgetBox
@@ -244,26 +225,8 @@ function Dashboard() {
               />
             </div>
 
-            {/* Right Column - Scrollable Expenses */}
-            <div className="flex-1 flex flex-col gap-3 h-full rounded-md overflow-hidden">
-              {showForm && budget && budget.is_active && (
-                <AddExpenseForm
-                  onClose={() => setShowForm(false)}
-                  setExpenses={setExpenses}
-                  budgetID={budget}
-                />
-              )}
-
-              {editingExpense && (
-                <EditExpense
-                  expense={editingExpense}
-                  onClose={() => setEditingExpense(null)}
-                  setExpenses={setExpenses}
-                />
-              )}
-
-              {/*  Filter expenses by selected budget */}
-              <div className="flex-1 min-h-[430px] overflow-y-auto">
+            <div className="flex-1 flex flex-col gap-4 h-full rounded-2xl overflow-hidden">
+              <div className="flex-1 min-h-[430px] lg:min-h-0 overflow-y-auto">
                 <ExpenseList
                   expenses={filteredExpenses}
                   allExpenses={expenses.filter(
@@ -281,25 +244,59 @@ function Dashboard() {
                 />
               </div>
 
-              <div className="bg-pastelgray rounded-md max-h-[300px] overflow-hidden flex flex-col">
+              <div className="bg-surface-white backdrop-blur-sm rounded-2xl shadow-2xl max-h-[300px] overflow-hidden flex flex-col p-6">
                 <div className="flex-1 overflow-y-auto">
                   <SubBudgets expenses={expenses} budget={budget} />
                 </div>
               </div>
-
-              {showAccountModal && (
-                <AccountModal
-                  onClose={() => setShowAccountModal(false)}
-                  setUserName={setUserName}
-                  setSuccessMessage={setSuccessMessage}
-                  setUpdateError={setUpdateError}
-                  userName={userName}
-                />
-              )}
             </div>
           </main>
         </div>
       </div>
+
+      {showForm && budget && budget.is_active && (
+        <AddExpenseForm
+          onClose={() => setShowForm(false)}
+          setExpenses={setExpenses}
+          budgetID={budget}
+        />
+      )}
+
+      {editingExpense && (
+        <EditExpense
+          expense={editingExpense}
+          onClose={() => setEditingExpense(null)}
+          setExpenses={setExpenses}
+        />
+      )}
+
+      {showBudgetForm && (
+        <AddBudgetForm
+          onClose={() => setShowBudgetForm(false)}
+          setBudget={setBudget}
+          setBudgets={setBudgets}
+          budgets={budgets}
+        />
+      )}
+
+      {editingBudget && budget && (
+        <EditBudget
+          budget={budget}
+          onClose={() => setEditingBudget(false)}
+          setBudget={setBudget}
+          setBudgets={setBudgets}
+        />
+      )}
+
+      {showAccountModal && (
+        <AccountModal
+          onClose={() => setShowAccountModal(false)}
+          setUserName={setUserName}
+          setSuccessMessage={setSuccessMessage}
+          setUpdateError={setUpdateError}
+          userName={userName}
+        />
+      )}
 
       {showReportModal && (
         <ReportModal
@@ -309,17 +306,16 @@ function Dashboard() {
         />
       )}
 
-      {/* Success message at bottom of screen */}
       {successMessage && (
         <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50">
-          <div className="bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg text-lg font-semibold transition-opacity duration-300">
+          <div className="bg-success text-white px-6 py-3 rounded-xl shadow-2xl text-lg font-semibold transition-opacity duration-300">
             {successMessage}
           </div>
         </div>
       )}
       {updateError && (
         <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50">
-          <div className="bg-red-600 text-white px-6 py-3 rounded-lg shadow-lg text-lg font-semibold transition-opacity duration-300">
+          <div className="bg-error text-white px-6 py-3 rounded-xl shadow-2xl text-lg font-semibold transition-opacity duration-300">
             {updateError}
           </div>
         </div>
