@@ -19,3 +19,15 @@ export function updateExpense(id, data) {
 export function deleteExpense(id) {
   return axios.delete(`/expenses/${id}`).then((res) => res.data);
 }
+
+export function getCategoryGoals(budgetId) {
+  return axios.get(`/category-goals/${budgetId}`).then((res) => res.data);
+}
+
+export function createCategoryGoal(data) {
+  return axios.post("/category-goals", data).then((res) => res.data);
+}
+
+export function deleteCategoryGoal(goalId) {
+  return axios.delete(`/category-goals/${goalId}`).then((res) => res.data);
+}

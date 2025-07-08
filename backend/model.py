@@ -13,8 +13,10 @@ class User(db.Model):
         created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
 
         #OTM relationships
-        expenses = db.relationship("Expenses", back_populates="user")
-        budgets = db.relationship("Budget", back_populates="user")
+        expenses = db.relationship("Expenses", back_populates="user", cascade="all, delete")
+        budgets = db.relationship("Budget", back_populates="user", cascade="all, delete")
+        category_goals = db.relationship("CategoryGoal", back_populates="user", cascade="all, delete")
+
         
 class Expenses(db.Model):
         id = db.Column(db.Integer, primary_key=True)
@@ -24,7 +26,7 @@ class Expenses(db.Model):
         amount = db.Column(db.Numeric(10,2), nullable=False)
         date = db.Column(db.Date)
         description = db.Column(db.Text)
-        type = db.Column(db.String(50))
+        type = db.Column(db.String, default="Other", nullable=False)
         
         #Relationship to User
         user = db.relationship("User", back_populates="expenses")
@@ -53,11 +55,31 @@ class Budget(db.Model):
         #Relationship to User
         user = db.relationship("User", back_populates="budgets")
         #Relationship to Expenses (Budget is parent)
-        expenses = db.relationship("Expenses", back_populates="budget")
+        expenses = db.relationship("Expenses", back_populates="budget", cascade="all, delete")
+        
+        category_goals = db.relationship("CategoryGoal", back_populates="budget", cascade="all, delete")
+
         
         __table_args__ = (
             CheckConstraint("amount >= 0", name="check_amount_not_negative"),
         )
-    
+
+class CategoryGoal(db.Model):
+        id = db.Column(db.Integer, primary_key=True)
+        user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+        budget_id = db.Column(db.Integer, db.ForeignKey("budget.id"), nullable=False)
+        type = db.Column(db.String, default="Other", nullable=False)
+        goal = db.Column(db.Numeric(10, 2), nullable=False)
+        
+        user = db.relationship("User", back_populates="category_goals")
+        budget = db.relationship("Budget", back_populates="category_goals")
+
+        __table_args__ = (
+            CheckConstraint("goal >= 0", name="goal"),
+            CheckConstraint(
+            "type IN ('Subscription', 'Transportation', 'Food', 'Entertainment', 'Bills/Utilities', 'Groceries/Necessities', 'Vacation', 'Other')",
+            name="check_valid_type"
+            )
+        )
     
 

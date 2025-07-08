@@ -5,13 +5,14 @@ from flask_cors import CORS
 from flask_migrate import Migrate
 import jwt
 from flask_bcrypt import Bcrypt
-from model import db, User, Expenses, Budget 
+from model import db, User, Expenses, Budget, CategoryGoal
 
 # Configure app with the config class that has database URI.
 # Create instance of SQLAlch that connects to app/DB config
 app = Flask(__name__)
 app.config.from_object(Config)
-CORS(app)
+#Had to change to allow cross server requests
+CORS(app, origins=["http://localhost:5173"], supports_credentials=True)
 
 db.init_app(app)
 migrate = Migrate(app, db)
@@ -35,7 +36,14 @@ def register():
     db.session.add(new_user)
     db.session.commit()
     
-    return jsonify({"message": "Account successfully created"}), 201 
+    token = jwt.encode(
+        {"user_id": new_user.id,
+         "username": new_user.username,
+        },
+    app.config["SECRET_KEY"],
+    algorithm="HS256" 
+    )
+    return jsonify({"message": "Account successfully created", "token": token}), 201 
 
     
 @app.route('/login', methods=['POST'])
@@ -49,11 +57,13 @@ def login():
         return jsonify({"error": "Username and password are required"}), 400
     existing_user = User.query.filter_by(username=username).first()
     if not existing_user:
-        return jsonify({"error": "Username not found"})
+        return jsonify({"error": "Username not found"}), 401
     
     if bcrypt.check_password_hash(existing_user.password, password):
         token = jwt.encode(
-            {"user_id": existing_user.id},
+            {"user_id": existing_user.id,
+             "username": existing_user.username
+             },
             app.config["SECRET_KEY"],
             algorithm="HS256"
         )
@@ -61,6 +71,62 @@ def login():
     else:
         return jsonify({"error": "Invalid password"}), 401
 
+@app.route('/account', methods=['PATCH'])
+def updateAccount():
+    try:
+        user_id = getUserIdToken()
+        user = User.query.get(user_id)
+        if not user:
+            return jsonify({"error": "User not found"}), 404
+
+        data = request.get_json()
+        username = data.get("username")
+        password = data.get("password")
+        
+        if username:
+            existing = User.query.filter_by(username=username).first()
+            if existing and existing.id != user.id:
+                return jsonify({"error": "Username already taken"}), 400
+            user.username = username
+
+        if password:
+            user.password = bcrypt.generate_password_hash(password).decode("utf-8")
+
+        db.session.commit()
+        new_token = jwt.encode(
+            {
+                "user_id": user.id,
+                "username": user.username,
+            },
+            app.config["SECRET_KEY"],
+            algorithm="HS256"
+        )
+        return jsonify({"message": "Account updated successfully", "token": new_token}), 200
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": "Update failed", "details": str(e)}), 500
+    
+
+@app.route('/account', methods=['DELETE'])
+def deleteAccount():
+    try:
+        user_id = getUserIdToken()
+        user = User.query.get(user_id)
+        if not user:
+            return jsonify({"error": "User not found"}), 404
+
+        # Optionally delete related data first if cascade isn't enabled
+        Budget.query.filter_by(user_id=user_id).delete()
+        Expenses.query.filter_by(user_id=user_id).delete()
+
+        db.session.delete(user)
+        db.session.commit()
+        return jsonify({"message": "Account successfully deleted"}), 200
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": "Could not delete account", "details": str(e)}), 500
 
 # Function to get user id from token
 def getUserIdToken():
@@ -100,7 +166,8 @@ def getExpenses():
         "amount": exp.amount,
         "date": exp.date,
         "description": exp.description,
-        "type": exp.type
+        "type": exp.type,
+        "budget_id": exp.budget_id
     } for exp in expenses]
     
     return jsonify(expenses_list)
@@ -120,7 +187,7 @@ def createExpense():
     amount1 = data.get("amount")
     date1 = data.get("date")
     description1 = data.get("description")
-    type1 = data.get("type")
+    type1 = data.get("type") or "Other"
     budget_id = data.get("budget_id")
     
     # Create instance of Expenses based on JSON data received and add it to the database if possible
@@ -135,7 +202,8 @@ def createExpense():
             "amount": str(new_expense.amount),
             "date": new_expense.date,
             "description":new_expense.description,
-            "type": new_expense.type
+            "type": new_expense.type,
+            "budget_id": new_expense.budget_id
         }), 201
     except:
         db.session.rollback()
@@ -159,7 +227,8 @@ def get_expense_by_id(id):
         "amount": expense.amount,
         "date": expense.date,
         "description": expense.description,
-        "type": expense.type
+        "type": expense.type,
+        "budget_id": expense.budget_id
     }
     return jsonify(expense_dict)
 
@@ -188,7 +257,9 @@ def updateExpField(id):
             "amount": str(expense.amount),
             "date": expense.date,
             "description": expense.description,
-            "type": expense.type
+            "type": expense.type,
+            "budget_id": expense.budget_id,
+            "user_id": expense.user_id
         }), 200
 
     except:
@@ -230,8 +301,8 @@ def getBudgets():
         "name": bud.name,
         "amount": bud.amount,
         "is_active": bud.is_active,
-        "start_date": bud.start_date,
-        "end_date": bud.end_date,
+        "start_date": bud.start_date.strftime('%Y-%m-%d') if bud.start_date else None,
+        "end_date": bud.end_date.strftime('%Y-%m-%d') if bud.end_date else None,
         "created_at": bud.created_at,
         "updated_at": bud.updated_at
     } for bud in budget]
@@ -275,8 +346,8 @@ def getBudgetById(id):
         "name": budget.name,
         "amount": budget.amount,
         "is_active": budget.is_active,
-        "start_date": budget.start_date,
-        "end_date": budget.end_date,
+        "start_date": budget.start_date.strftime('%Y-%m-%d') if budget.start_date else None,
+        "end_date": budget.end_date.strftime('%Y-%m-%d') if budget.end_date else None,
         "created_at": budget.created_at,
         "updated_at": budget.updated_at
     }
@@ -330,5 +401,71 @@ def deleteBudget(id):
         db.session.rollback()
         return jsonify({"error": "Could not remove from database"}), 500
     
+    
+@app.route('/category-goals/<int:budget_id>', methods=['GET'])
+def getCategoryGoals(budget_id):
+    user_id = getUserIdToken()
+    goals = CategoryGoal.query.filter_by(user_id=user_id, budget_id=budget_id).all()
+    return jsonify([
+        {
+            "id": g.id,
+            "type": g.type,
+            "goal": float(g.goal)
+        }
+        for g in goals
+    ])
+    
+@app.route('/category-goals', methods=['POST'])
+def createCategoryGoal():
+    user_id = getUserIdToken()
+    data = request.get_json()
+    type = data.get("type")
+    goal = data.get("goal")
+    budget_id = data.get("budget_id")
+
+    if not all([type, goal, budget_id]):
+        return jsonify({"error": "Missing fields"}), 400
+
+    budget = Budget.query.get(budget_id)
+    if not budget or budget.user_id != user_id:
+        return jsonify({"error": "Invalid budget"}), 403
+
+    try:
+        new_goal = CategoryGoal(
+            user_id=user_id,
+            budget_id=budget_id,
+            type=type,
+            goal=goal
+        )
+        db.session.add(new_goal)
+        db.session.commit()
+        return jsonify({
+            "id": new_goal.id,
+            "type": new_goal.type,
+            "goal": float(new_goal.goal)
+        }), 201
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": "Could not create goal", "details": str(e)}), 500
+
+@app.route('/category-goals/<int:goal_id>', methods=['DELETE'])
+def deleteCategoryGoal(goal_id):
+    user_id = getUserIdToken()
+    goal = CategoryGoal.query.get(goal_id)
+
+    if not goal:
+        return jsonify({"error": "Not found"}), 404
+    if goal.user_id != user_id:
+        return jsonify({"error": "Unauthorized"}), 403
+
+    try:
+        db.session.delete(goal)
+        db.session.commit()
+        return jsonify({"message": "Goal deleted"}), 200
+    except:
+        db.session.rollback()
+        return jsonify({"error": "Could not delete goal"}), 500
+
 if __name__ == '__main__':
     app.run(debug=True)

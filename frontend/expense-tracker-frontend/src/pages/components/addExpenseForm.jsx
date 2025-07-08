@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { createExpense } from "../../api/expenses";
 
-export default function AddExpenseForm({ onClose, setExpenses }) {
-  //state for each table field
+export default function AddExpenseForm({ onClose, setExpenses, budgetID }) {
   const [name, setName] = useState("");
   const [amount, setAmount] = useState("");
   const [date, setDate] = useState("");
@@ -13,14 +12,15 @@ export default function AddExpenseForm({ onClose, setExpenses }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const finalType = type || "Other";
+
     const newExpense = {
-      //used spread operator like this to avoid sending empty strings to DB
-      //and causing a silent crash
+      budget_id: budgetID.id,
       amount: parseFloat(amount),
       ...(name && { name }),
       ...(date && { date }),
       ...(description && { description }),
-      ...(type && { type }),
+      type: finalType,
     };
 
     try {
@@ -37,68 +37,89 @@ export default function AddExpenseForm({ onClose, setExpenses }) {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-xl shadow-xl w-full max-w-md">
-        <form onSubmit={handleSubmit}>
-          <h2 className="text-xl font-semibold mb-4">Add Expense</h2>
-          {/* Form Inputs */}
-          <input
-            type="text"
-            placeholder="Name (optional)"
-            className="w-full border p-2 rounded"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
+      <div className="bg-gray-800 p-6 rounded-xl shadow-xl w-full max-w-md text-white">
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <h2 className="text-2xl font-bold text-white">Add Expense</h2>
 
-          <input
-            type="number"
-            placeholder="Amount (required)"
-            className="w-full border p-2 rounded"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            required
-          />
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-300">Name</label>
+            <input
+              type="text"
+              placeholder="Optional"
+              className="w-full border border-gray-600 bg-gray-700 text-white rounded px-3 py-2"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
 
-          <input
-            type="date"
-            placeholder="Date (optional)"
-            className="w-full border p-2 rounded"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-          />
-          <textarea
-            type="text"
-            placeholder="Description (optional)"
-            className="w-full border p-2 rounded"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-          <select
-            value={type}
-            onChange={(e) => setType(e.target.value)}
-            className="w-full border p-2 rounded"
-          >
-            <option value="">Select Type (optional)</option>
-            <option value="Food">Food</option>
-            <option value="Transportation">Transportation</option>
-            <option value="Subscription">Subscription</option>
-            <option value="Entertainment">Entertainment</option>
-            <option value="Bills/Utilities">Bills/Utilities</option>
-            <option value="Groceries/Necessities">Groceries/Necessities</option>
-            <option value="Vacation">Vacation</option>
-            <option value="Other">Other</option>
-          </select>
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-300">Amount</label>
+            <input
+              type="number"
+              placeholder="Required"
+              className="w-full border border-gray-600 bg-gray-700 text-white rounded px-3 py-2"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              required
+            />
+          </div>
 
-          <div className="mt-4 flex justify-end gap-2">
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-300">Date</label>
+            <input
+              type="date"
+              placeholder="Optional"
+              className="w-full border border-gray-600 bg-gray-700 text-white rounded px-3 py-2"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-300">Type</label>
+            <select
+              value={type}
+              onChange={(e) => setType(e.target.value)}
+              className="w-full border border-gray-600 bg-gray-700 text-white rounded px-3 py-2"
+            >
+              <option value="">Select Type (optional)</option>
+              <option value="Food">Food</option>
+              <option value="Transportation">Transportation</option>
+              <option value="Subscription">Subscription</option>
+              <option value="Entertainment">Entertainment</option>
+              <option value="Bills/Utilities">Bills/Utilities</option>
+              <option value="Groceries/Necessities">
+                Groceries/Necessities
+              </option>
+              <option value="Vacation">Vacation</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-300">
+              Description
+            </label>
+            <textarea
+              placeholder="Details or notes... (optional)"
+              className="w-full border border-gray-600 bg-gray-700 text-white rounded px-3 py-2"
+              rows="3"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+          </div>
+
+          <div className="flex justify-end pt-4 gap-2">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 text-black"
+              className="px-4 py-2 rounded bg-gray-600 hover:bg-gray-500 text-white text-sm"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 rounded bg-indigo-600 hover:bg-indigo-700 text-white"
+              className="px-4 py-2 rounded bg-indigo-600 hover:bg-indigo-700 text-white text-sm"
               disabled={loading}
             >
               {loading ? "Saving..." : "Save"}
