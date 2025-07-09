@@ -64,43 +64,52 @@ function Start() {
 
   return (
     <div
-      className="min-h-screen flex items-center justify-center bg-cover bg-center"
-      style={{ backgroundImage: `url(${backgroundImage})` }}
+      className="min-h-screen flex items-center justify-center bg-amber-50 bg-cover bg-center bg-fixed w-full"
     >
-      <div className="text-white text-center p-8 space-y-4">
-        <p className="text-xl font-extrabold">
-          Track your spending. Simplify your budget. Stay in control.
-        </p>
-        <div className="flex flex-col items-center space-y-2">
-          <button
-            onClick={() => setShowLogin(true)}
-            className="cursor-pointer bg-orange-500 hover:bg-orange-600 text-white font-bold text-lg px-8 py-3 rounded-full transition mt-6"
-          >
-            LOGIN
-          </button>
-          <button
-            onClick={() => setShowRegister(true)}
-            className="cursor-pointer bg-orange-500 hover:bg-orange-600 text-white font-bold text-lg px-8 py-3 rounded-full transition mt-4"
-          >
-            REGISTER
-          </button>
-        </div>
-      </div>
+    {/* make background image  (simply spend icon) and graphic (bottom right) separate files, then background color coded like i did above. don't hard code an image, it won't scale responsively.
+    */}
+      {/* main landing card - keeps things contained and clean, responsive width for card */}
+      <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-2xl p-8 w-full md:w-[50%] lg:w-[500px] mx-4">
+        {/* welcome screen - show when no auth form is active */}
+        {!showLogin && !showRegister && (
+          <div className="text-center space-y-6">
+            <p className="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary to-accent text-transparent bg-clip-text">
+              Track your spending. Simplify your budget. Stay in control.
+            </p>
+            
+            {/* buttons need same width for visual balance */}
+            <div className="flex flex-col space-y-3">
+              <button
+                onClick={() => setShowLogin(true)}
+                className="w-full bg-primary hover:bg-primary-dark active:scale-95 hover:scale-105 transform transition duration-200 text-white font-bold py-3 rounded-full shadow-lg"
+              >
+                LOGIN
+              </button>
+              <button
+                onClick={() => setShowRegister(true)}
+                className="w-full bg-primary hover:bg-primary-dark active:scale-95 hover:scale-105 transform transition duration-200 text-white font-bold py-3 rounded-full shadow-lg"
+              >
+                REGISTER
+              </button>
+            </div>
+          </div>
+        )}
 
-      {(showLogin || showRegister) && (
-        <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
-          <div className="bg-pastelgray p-6 rounded-xl shadow-xl space-y-4 w-80">
-            <h2 className="text-2xl font-bold text-midnightgreen">
-              {showLogin ? "Login" : "Register"}
+        {/* login/register form - show when auth form is active */}
+        {(showLogin || showRegister) && (
+          <div>
+            <h2 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary to-accent text-transparent bg-clip-text text-center mb-3">
+              {showLogin ? "Welcome Back" : "Join SimplySpent"}
             </h2>
             <form
               onSubmit={showLogin ? handleLogin : handleRegister}
-              className="space-y-3 "
+              className="space-y-4"
             >
+              {/* basic form inputs - keeping it simple */}
               <input
                 type="text"
                 placeholder="Username"
-                className="text-midnightgreen w-full px-3 py-2 border rounded focus:outline-none"
+                className="w-full px-4 py-3 border border-neutral-light rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 disabled={loading}
@@ -109,17 +118,18 @@ function Start() {
               <input
                 type="password"
                 placeholder="Password"
-                className="text-midnightgreen w-full px-3 py-2 border rounded focus:outline-none"
+                className="w-full px-4 py-3 border border-neutral-light rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 disabled={loading}
                 required
               />
+              {/* only show confirm password for registration */}
               {!showLogin && (
                 <input
                   type="password"
                   placeholder="Confirm Password"
-                  className="text-midnightgreen w-full px-3 py-2 border rounded"
+                  className="w-full px-4 py-3 border border-neutral-light rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   disabled={loading}
@@ -127,22 +137,17 @@ function Start() {
                 />
               )}
               {error && <p className="text-red-500 text-sm">{error}</p>}
-              <div className="flex justify-between items-center">
-                <button
-                  type="button"
-                  onClick={resetForms}
-                  className="cursor-pointer text-sm text-gray-600 underline"
-                  disabled={loading}
-                >
-                  Cancel
-                </button>
+              {/* form actions - cancel vs submit */}
+              <div className="flex flex-col justify-between items-center">
+                {/* submit button with loading state, button styles match other buttons now. keep feel consistent.  */}
                 <button
                   type="submit"
-                  className={`bg-midnightgreen text-white px-4 py-2 rounded hover : cursor-pointer bg-blue-700 flex items-center justify-center ${
+                  className={`w-full bg-primary hover:bg-primary-dark active:scale-95 transform transition duration-200 text-white font-bold py-3 rounded-full shadow-lg flex items-center justify-center ${
                     loading ? "opacity-50 cursor-not-allowed" : ""
                   }`}
                   disabled={loading}
                 >
+                  {/* spinner animation when loading */}
                   {loading ? (
                     <div className="flex items-center space-x-2">
                       <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
@@ -154,11 +159,19 @@ function Start() {
                     "Register"
                   )}
                 </button>
+                <button
+                  type="button"
+                  onClick={resetForms}
+                  className="cursor-pointer text-sm text-gray-600 mt-2 hover:text-blue-800 hover:underline"
+                  disabled={loading}
+                >
+                  Cancel
+                </button>
               </div>
             </form>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

@@ -50,26 +50,26 @@ export default function EditExpense({ expense, onClose, setExpenses }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-gray-800 p-6 rounded-xl shadow-xl w-full max-w-md text-white">
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <h2 className="text-2xl font-bold text-white">Edit Expense</h2>
+    <div className="fixed inset-0 bg-overlay backdrop-blur-sm flex items-center justify-center z-50">
+      <div className="bg-surface-white backdrop-blur-sm p-8 rounded-2xl shadow-2xl w-full max-w-md">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <h2 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary to-accent text-transparent bg-clip-text text-center mb-6">Edit Expense</h2>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-300">Name</label>
+            <label className="block text-sm font-semibold text-neutral mb-2">Expense Name</label>
             <input
               type="text"
-              className="w-full border border-gray-600 bg-gray-700 text-white rounded px-3 py-2"
+              className="w-full px-4 py-3 border border-neutral-light rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-300">Amount</label>
+            <label className="block text-sm font-semibold text-neutral mb-2">Amount</label>
             <input
               type="number"
-              className="w-full border border-gray-600 bg-gray-700 text-white rounded px-3 py-2"
+              className="w-full px-4 py-3 border border-neutral-light rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               required
@@ -77,22 +77,23 @@ export default function EditExpense({ expense, onClose, setExpenses }) {
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-300">Date</label>
+            <label className="block text-sm font-semibold text-neutral mb-2">Date</label>
             <input
               type="date"
-              className="w-full border border-gray-600 bg-gray-700 text-white rounded px-3 py-2"
+              className="w-full px-4 py-3 border border-neutral-light rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               value={date}
               onChange={(e) => setDate(e.target.value)}
             />
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-300">Type</label>
+            <label className="block text-sm font-semibold text-neutral mb-2">Category</label>
             <select
               value={type}
               onChange={(e) => setType(e.target.value)}
-              className="w-full border border-gray-600 bg-gray-700 text-white rounded px-3 py-2"
+              className="w-full px-4 py-3 border border-neutral-light rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
             >
+              <option value="">Select Category</option>
               <option value="Food">Food</option>
               <option value="Transportation">Transportation</option>
               <option value="Subscription">Subscription</option>
@@ -107,53 +108,41 @@ export default function EditExpense({ expense, onClose, setExpenses }) {
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-300">
+            <label className="block text-sm font-semibold text-neutral mb-2">
               Description
             </label>
             <textarea
-              className="w-full border border-gray-600 bg-gray-700 text-white rounded px-3 py-2"
+              className="w-full px-4 py-3 border border-neutral-light rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
               rows="3"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Details or notes..."
             />
           </div>
 
-          <div className="flex justify-between pt-4">
-            {!confirmingDelete ? (
-              <button
-                type="button"
-                onClick={() => setConfirmingDelete(true)}
-                className="text-sm text-red-400 hover:underline"
-                disabled={loading}
-              >
-                Delete
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={handleDelete}
-                className="text-sm text-red-500 font-semibold hover:underline"
-                disabled={loading}
-              >
-                Confirm Delete
-              </button>
-            )}
+          <div className="flex justify-between items-center pt-6">
+            <button
+              type="button"
+              onClick={handleDelete}
+              className="px-4 py-2 rounded-xl bg-error hover:bg-error/90 text-light text-sm font-semibold transition-colors duration-200"
+              disabled={loading}
+            >
+              {loading ? "Deleting..." : "Delete"}
+            </button>
 
-            <div className="flex gap-2">
+            <div className="flex gap-3">
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 rounded bg-gray-600 hover:bg-gray-500 text-white text-sm"
+                className="px-6 py-3 rounded-xl bg-neutral-light hover:bg-neutral-light/70 text-neutral font-semibold transition-colors duration-200"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 rounded bg-indigo-600 hover:bg-indigo-700 text-white text-sm"
+                className="px-6 py-3 rounded-xl bg-gradient-to-r from-primary to-accent text-light font-semibold shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105"
                 disabled={loading}
               >
-                {loading ? "Saving..." : "Save"}
+                {loading ? "Updating..." : "Update Expense"}
               </button>
             </div>
           </div>

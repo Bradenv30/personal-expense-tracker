@@ -468,4 +468,4 @@ def deleteCategoryGoal(goal_id):
         return jsonify({"error": "Could not delete goal"}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=3001) # 5000 is used by Airplay and airtunes on mac

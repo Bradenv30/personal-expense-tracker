@@ -6,8 +6,9 @@ export default function TopBar({
   onAddBudgetClick,
   onAccountClick,
   onReportClick,
+  isReportsDisabled = false,
 }) {
-  const [avatarColor, setAvatarColor] = useState("#4F46E5");
+  const [avatarColor, setAvatarColor] = useState("#6366F1");
   const [showColorPicker, setShowColorPicker] = useState(false);
   const firstInitial = userName.charAt(0).toUpperCase();
 
@@ -17,57 +18,58 @@ export default function TopBar({
   };
 
   const colorOptions = [
-    "#4F46E5", // Indigo
-    "#10B981", // Green
-    "#EF4444", // Red
-    "#F59E0B", // Amber
-    "#3B82F6", // Blue
-    "#8B5CF6", // Violet
+    "#6366F1", // Primary
+    "#10B981", // Success
+    "#EF4444", // Error
+    "#F59E0B", // Warning
+    "#84CC16", // Accent
+    "#8B5CF6", // Purple
   ];
 
   return (
-    <header className="bg-midnightgreen shadow p-6">
+    <header className="bg-surface-white backdrop-blur-sm shadow-2xl p-6">
       <div className="flex items-center justify-between w-full">
-        {/* Left: Dashboard Title + Buttons */}
         <div className="flex items-center">
-          <h1 className="text-3xl font-extrabold text-white">
+          <h1 className="text-3xl font-extrabold bg-gradient-to-r from-primary to-accent text-transparent bg-clip-text">
             {userName}'s Dashboard
           </h1>
 
-          {/* Add Buttons next to title with spacing */}
           <div className="flex items-center space-x-6 ml-8">
             <button
               onClick={onAddBudgetClick}
-              className="bg-lightorange hover:bg-orange-600 text-white text-xl px-5 py-2.5 rounded-xl font-semibold shadow transition"
+              className="bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 active:scale-95 transform transition duration-200 text-white text-lg px-5 py-2.5 rounded-xl font-semibold shadow-lg"
             >
               + Add Budget
             </button>
             <button
               onClick={onAddClick}
-              className="bg-lightorange hover:bg-orange-600 text-white text-xl px-5 py-2.5 rounded-xl font-semibold shadow transition"
+              className="bg-gradient-to-r from-accent to-primary hover:from-accent/90 hover:to-primary/90 active:scale-95 transform transition duration-200 text-white text-lg px-5 py-2.5 rounded-xl font-semibold shadow-lg"
             >
               + Add Expense
             </button>
 
             <button
               onClick={onReportClick}
-              className="bg-blue-600 hover:bg-blue-700 text-white text-xl px-5 py-2.5 rounded-xl font-semibold shadow transition"
+              disabled={isReportsDisabled}
+              className={`text-lg px-5 py-2.5 rounded-xl font-semibold shadow-lg transition duration-200 ${
+                isReportsDisabled
+                  ? "bg-neutral-light/50 text-neutral/50 cursor-not-allowed"
+                  : "bg-secondary/80 hover:bg-secondary/60 active:scale-95 transform text-white"
+              }`}
             >
               Reports
             </button>
           </div>
         </div>
 
-        {/* Right: Avatar + My Account */}
         <div className="flex items-center space-x-3 relative">
           <button
             onClick={onAccountClick}
-            className="text-white underline text-base hover:text-indigo-300 transition"
+            className="text-neutral underline text-base hover:text-primary transition duration-200"
           >
             My Account
           </button>
 
-          {/* Avatar Circle */}
           <div className="relative">
             <div
               onClick={() => setShowColorPicker(!showColorPicker)}
@@ -78,7 +80,7 @@ export default function TopBar({
             </div>
 
             {showColorPicker && (
-              <div className="absolute right-0 mt-2 bg-white p-2 rounded shadow z-50 flex gap-2">
+              <div className="absolute right-0 mt-2 bg-surface-white p-2 rounded shadow z-50 flex gap-2">
                 {colorOptions.map((color) => (
                   <div
                     key={color}

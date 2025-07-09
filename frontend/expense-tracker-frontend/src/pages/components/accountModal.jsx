@@ -78,26 +78,26 @@ export default function AccountModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-gray-800 p-6 rounded-xl shadow-xl w-full max-w-md text-white">
-        <h2 className="text-2xl font-bold mb-4">My Account</h2>
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
+      <div className="bg-white/90 backdrop-blur-sm p-8 rounded-2xl shadow-2xl w-full max-w-md">
+        <h2 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary to-accent text-transparent bg-clip-text text-center mb-6">My Account</h2>
 
         {/* Change Credentials */}
         <form onSubmit={handleUpdate} className="space-y-4 mb-6">
           <div>
-            <label className="text-sm font-medium text-gray-300">
+            <label className="block text-sm font-semibold text-neutral mb-2">
               Change Username
             </label>
             <input
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="w-full border border-gray-600 bg-gray-700 text-white rounded px-3 py-2"
+              className="w-full px-4 py-3 border border-neutral-light rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
             />
           </div>
 
           <div>
-            <label className="text-sm font-medium text-gray-300">
+            <label className="block text-sm font-semibold text-neutral mb-2">
               Change Password
             </label>
             <input
@@ -105,12 +105,12 @@ export default function AccountModal({
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="New password"
-              className="w-full border border-gray-600 bg-gray-700 text-white rounded px-3 py-2"
+              className="w-full px-4 py-3 border border-neutral-light rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
             />
           </div>
 
           <div>
-            <label className="text-sm font-medium text-gray-300">
+            <label className="block text-sm font-semibold text-neutral mb-2">
               Confirm Password
             </label>
             <input
@@ -118,37 +118,24 @@ export default function AccountModal({
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               placeholder="Confirm new password"
-              className="w-full border border-gray-600 bg-gray-700 text-white rounded px-3 py-2"
+              className="w-full px-4 py-3 border border-neutral-light rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
             />
           </div>
 
           <button
             type="submit"
-            className="w-full bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded text-white text-sm font-semibold transition flex justify-center items-center h-10"
+            className={`w-full bg-primary hover:bg-primary-dark active:scale-95 transform transition duration-200 text-white font-bold py-3 rounded-full shadow-lg flex justify-center items-center ${
+              isUpdating ? "opacity-50 cursor-not-allowed" : ""
+            }`}
             disabled={isUpdating}
           >
             {isUpdating ? (
-              <svg
-                className="animate-spin h-4 w-4 text-white"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                ></circle>
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-                ></path>
-              </svg>
+              <div className="flex items-center space-x-2">
+                <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                <span>Updating...</span>
+              </div>
             ) : (
-              "Update Credentials"
+              "Update Account"
             )}
           </button>
         </form>
@@ -157,7 +144,7 @@ export default function AccountModal({
         <div className="flex justify-between items-center">
           <button
             onClick={handleLogout}
-            className="text-sm text-indigo-400 hover:underline"
+            className="text-sm text-secondary hover:text-secondary-light transition duration-200 underline"
           >
             Log Out
           </button>
@@ -165,14 +152,14 @@ export default function AccountModal({
           {!confirmingDelete ? (
             <button
               onClick={() => setConfirmingDelete(true)}
-              className="text-sm text-red-500 hover:underline"
+              className="text-sm text-error hover:text-red-700 transition duration-200 underline"
             >
               Delete Account
             </button>
           ) : (
             <button
               onClick={handleDelete}
-              className="text-sm text-red-600 font-semibold hover:underline"
+              className="text-sm text-error font-semibold hover:text-red-700 transition duration-200 underline"
             >
               Confirm Delete
             </button>
@@ -180,12 +167,12 @@ export default function AccountModal({
         </div>
 
         {/* Close Button */}
-        <div className="mt-6 flex justify-end">
+        <div className="mt-6 flex justify-center">
           <button
             onClick={onClose}
-            className="px-4 py-2 rounded bg-gray-600 hover:bg-gray-500 text-white text-sm"
+            className="text-sm text-neutral hover:text-neutral-light transition duration-200"
           >
-            Close
+            Cancel
           </button>
         </div>
       </div>

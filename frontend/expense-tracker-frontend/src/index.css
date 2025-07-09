@@ -1,22 +1,50 @@
 @import "tailwindcss";
 
-/* with this utlity its hidden. should we style or hide? */
+/* simply spent brand colors - building on existing palette */
 
 @theme {
-  --color-peach: oklch(0.9605 0.0162 64.67);
-  --color-midnightgreen: oklch(0.3204 0.0511 192.91);
-  --color-dartmouth: oklch(0.4783 0.0975 164.85);
-  --color-pigment: oklch(0.6176 0.1681 150.04);
-  --color-mantis: oklch(0.7282 0.1609 140.16);
-  --color-ashgrey: oklch(0.8323 0.0177 173.95);
-  --color-cinereous: oklch(0.6825 0.0234 46.87);
-  --color-pastelgray: oklch(0.8342 0.0338 223.48);
-  --color-dustgreen: oklch(0.4519 0.046 162.1);
-  --color-vanillaice: oklch(0.9137 0.0273 223.24);
-  --color-rusty: oklch(0.6609 0.1561 44.91);
-  --color-darkice: oklch(0.6244 0.0306 222.56);
-  --color-seagreen: oklch(0.6336 0.0739 170.78);
-  --color-lightorange: oklch(0.6178 0.1324 70.26);
+  /* === BRAND PRIMARY === */
+  /* main orange brand color - for buttons, highlights, calls to action */
+  --color-primary: oklch(0.6178 0.1324 70.26); /* lightorange */
+  --color-primary-dark: oklch(0.5500 0.1400 70.26); /* darker orange for hovers */
+  --color-primary-light: oklch(0.7000 0.1100 70.26); /* lighter orange for backgrounds */
+
+  /* === BRAND SECONDARY === */
+  /* deep green for headers, navigation, professional feel */
+  --color-secondary: oklch(0.3204 0.0511 192.91); /* midnightgreen */
+  --color-secondary-light: oklch(0.4519 0.046 162.1); /* dustgreen */
+  --color-secondary-dark: oklch(0.2500 0.0600 192.91); /* darker midnight */
+
+  /* === ACCENT === */
+  /* pink for gradients, highlights, modern touch */
+  --color-accent: oklch(0.7000 0.1500 350.00); /* pink for gradients */
+  --color-accent-light: oklch(0.8000 0.1200 350.00); /* lighter pink */
+
+  /* === NEUTRALS === */
+  /* grays for cards, backgrounds, text */
+  --color-surface: oklch(0.8342 0.0338 223.48); /* pastelgray - main card bg */
+  --color-surface-light: oklch(0.9137 0.0273 223.24); /* vanillaice - lighter bg */
+  --color-surface-dark: oklch(0.6244 0.0306 222.56); /* darkice - darker cards */
+  --color-surface-white: oklch(1.0000 0.0000 0 / 0.9); /* clean white with transparency */
+  
+  --color-neutral: oklch(0.6825 0.0234 46.87); /* cinereous - text, borders */
+  --color-neutral-light: oklch(0.8323 0.0177 173.95); /* ashgrey - subtle borders */
+  --color-neutral-dark: oklch(0.4500 0.0300 46.87);
+
+  /* === TEXT COLORS === */
+  --color-text-light: oklch(0.9800 0.0100 0);
+  --color-text-dark: oklch(0.2000 0.0200 46.87);
+
+  /* === OVERLAY === */
+  --color-overlay: oklch(0.2000 0.0100 0 / 0.4);
+  --color-overlay-dark: oklch(0.1000 0.0100 0 / 0.5);
+
+  /* === SEMANTIC === */
+  /* success, warning, error states */
+  --color-success: oklch(0.7282 0.1609 140.16); /* mantis green */
+  --color-success-light: oklch(0.6336 0.0739 170.78); /* seagreen */
+  --color-warning: oklch(0.6609 0.1561 44.91); /* rusty orange */
+  --color-error: oklch(0.6000 0.2000 20.00); /* red for errors */
 
   --font-sans: Verdana, sans-serif;
 }
