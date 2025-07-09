@@ -13,13 +13,14 @@ A modern, responsive web application for tracking personal expenses and managing
 
 **Backend:**
 - Python Flask REST API
-- SQLAlchemy ORM with PostgreSQL
+- SQLAlchemy ORM with SQLite (default)
 - Flask-Migrate for database migrations
 - JWT authentication with bcrypt
 - CORS enabled for cross-origin requests
 
 **Database:**
-- PostgreSQL (recommended) or SQLite for development
+- SQLite (default, no setup required)
+- PostgreSQL (optional, for production)
 
 ## 📋 Prerequisites
 
@@ -27,7 +28,6 @@ Before getting started, ensure you have:
 
 - **Python 3.8+** (with pip)
 - **Node.js 16+** (with npm)
-- **PostgreSQL** (or use SQLite for quick setup)
 - **Git**
 
 ## 🛠️ Installation & Setup
@@ -48,36 +48,14 @@ python3 -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 
 # Install dependencies
-pip install Flask Flask-SQLAlchemy Flask-Migrate Flask-Bcrypt Flask-CORS python-dotenv PyJWT psycopg2-binary
+pip install Flask Flask-SQLAlchemy Flask-Migrate Flask-Bcrypt Flask-CORS python-dotenv PyJWT
 
-# Create environment variables
-touch .env
-```
-
-Add these variables to your `.env` file:
-```bash
-# For PostgreSQL
-DATABASE_URL=postgresql://username:password@localhost:5432/expenses_db
-SECRET_KEY=your-secret-key-here
-
-# For SQLite (easier setup)
-# DATABASE_URL=sqlite:///expenses.db
-# SECRET_KEY=your-secret-key-here
-```
-
-**Database Setup:**
-```bash
-# For PostgreSQL (if using)
-createdb expenses_db
-
-# Apply migrations
-export FLASK_APP=app.py
-flask db upgrade
-
-# Start the backend server
+# Start the backend server (uses SQLite by default)
 python app.py
-# Backend runs on http://localhost:5000
+# Backend runs on http://localhost:3001
 ```
+
+**That's it!** The app will automatically create a SQLite database file at `backend/instance/expenses.db`.
 
 ### 3. Frontend Setup (React)
 
@@ -160,6 +138,36 @@ Colors are defined in `frontend/src/index.css` as CSS custom properties.
 - `GET /category-goals/:budget_id` - Get goals for budget
 - `POST /category-goals` - Create category goal
 - `DELETE /category-goals/:id` - Delete category goal
+
+## 🗄️ Database Configuration (Optional)
+
+### Using SQLite (Default)
+No configuration needed. The app automatically uses SQLite and creates the database file.
+
+### Using PostgreSQL (Optional)
+If you want to use PostgreSQL instead:
+
+1. Install PostgreSQL and create a database:
+```bash
+createdb expenses_db
+```
+
+2. Install the PostgreSQL adapter:
+```bash
+pip install psycopg2-binary
+```
+
+3. Create a `.env` file in the backend directory:
+```bash
+DATABASE_URL=postgresql://username:password@localhost:5432/expenses_db
+SECRET_KEY=your-secret-key-here
+```
+
+4. Apply migrations:
+```bash
+export FLASK_APP=app.py
+flask db upgrade
+```
 
 ## 🚀 Development
 
