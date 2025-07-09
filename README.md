@@ -20,7 +20,6 @@ A modern, responsive web application for tracking personal expenses and managing
 
 **Database:**
 - SQLite (default, no setup required)
-- PostgreSQL (optional, for production)
 
 ## 📋 Prerequisites
 
@@ -143,31 +142,6 @@ Colors are defined in `frontend/src/index.css` as CSS custom properties.
 
 ### Using SQLite (Default)
 No configuration needed. The app automatically uses SQLite and creates the database file.
-
-### Using PostgreSQL (Optional)
-If you want to use PostgreSQL instead:
-
-1. Install PostgreSQL and create a database:
-```bash
-createdb expenses_db
-```
-
-2. Install the PostgreSQL adapter:
-```bash
-pip install psycopg2-binary
-```
-
-3. Create a `.env` file in the backend directory:
-```bash
-DATABASE_URL=postgresql://username:password@localhost:5432/expenses_db
-SECRET_KEY=your-secret-key-here
-```
-
-4. Apply migrations:
-```bash
-export FLASK_APP=app.py
-flask db upgrade
-```
 
 ## 🚀 Development
 
