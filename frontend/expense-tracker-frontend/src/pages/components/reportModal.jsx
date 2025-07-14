@@ -42,10 +42,13 @@ export default function ReportModal({ onClose, budget, expenses }) {
       <div className="absolute inset-0 z-40" />
       <div className="relative z-50 bg-white text-black p-8 rounded-xl shadow-xl w-full max-w-4xl">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-3xl font-bold flex items-center gap-2">
+          <h2 className="text-3xl font-bold flex items-center gap-2 bg-gradient-to-r from-primary to-accent text-transparent bg-clip-text">
             📊 Budget Report — {budget.name || "Current Budget"}
           </h2>
-          <button onClick={onClose} className="text-red-600 text-xl font-bold">
+          <button
+            onClick={onClose}
+            className="text-error hover:text-error/80 text-xl font-bold transition-colors duration-200"
+          >
             ✕
           </button>
         </div>
@@ -80,7 +83,9 @@ export default function ReportModal({ onClose, budget, expenses }) {
 
         {/* Bar Chart */}
         <div className="mt-8">
-          <h3 className="text-xl font-semibold mb-2">Spending by Type</h3>
+          <h3 className="text-xl font-semibold mb-2 bg-gradient-to-r from-primary to-accent text-transparent bg-clip-text">
+            Spending by Type
+          </h3>
           {chartData.length === 0 ? (
             <p className="text-gray-500">No expenses to display.</p>
           ) : (
@@ -99,7 +104,7 @@ export default function ReportModal({ onClose, budget, expenses }) {
                   <Bar
                     dataKey="amount"
                     name="Amount"
-                    fill="#0B6E4F"
+                    fill="oklch(0.7665 0.1387 91.06)"
                     radius={[6, 6, 0, 0]}
                   />
                 </BarChart>

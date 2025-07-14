@@ -71,34 +71,40 @@ export default function EditBudget({ budget, onClose, setBudget, setBudgets }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-gray-800 p-6 rounded-xl shadow-xl w-full max-w-md text-white">
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <h2 className="text-2xl font-bold text-white">Edit Budget</h2>
+    <div className="fixed inset-0 bg-overlay backdrop-blur-sm flex items-center justify-center z-50">
+      <div className="bg-surface-white backdrop-blur-sm p-8 rounded-2xl shadow-2xl w-full max-w-md">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <h2 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary to-accent text-transparent bg-clip-text text-center mb-6">
+            Edit Budget
+          </h2>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-300">Name</label>
+            <label className="block text-sm font-semibold text-neutral mb-2">
+              Budget Name
+            </label>
             <input
               type="text"
-              className="w-full border border-gray-600 bg-gray-700 text-white rounded px-3 py-2"
+              className="w-full px-4 py-3 border border-neutral-light rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-300">Amount</label>
+            <label className="block text-sm font-semibold text-neutral mb-2">
+              Budget Amount
+            </label>
             <input
               type="number"
-              className="w-full border border-gray-600 bg-gray-700 text-white rounded px-3 py-2"
+              className="w-full px-4 py-3 border border-neutral-light rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               required
             />
           </div>
 
-          <div className="mt-4">
-            <label className="block text-base font-medium text-white mb-2">
+          <div className="space-y-3">
+            <label className="block text-sm font-semibold text-neutral mb-2">
               Budget Status
             </label>
             <div className="flex gap-6">
@@ -109,9 +115,9 @@ export default function EditBudget({ budget, onClose, setBudget, setBudgets }) {
                   value="active"
                   checked={isActive === true}
                   onChange={() => setIsActive(true)}
-                  className="w-5 h-5 accent-indigo-500"
+                  className="w-4 h-4 accent-success"
                 />
-                <span className="text-base text-white">Active</span>
+                <span className="text-sm text-neutral">Active</span>
               </label>
 
               <label className="flex items-center gap-3">
@@ -121,21 +127,21 @@ export default function EditBudget({ budget, onClose, setBudget, setBudgets }) {
                   value="inactive"
                   checked={isActive === false}
                   onChange={() => setIsActive(false)}
-                  className="w-5 h-5 accent-red-500"
+                  className="w-4 h-4 accent-error"
                 />
-                <span className="text-base text-white">Inactive</span>
+                <span className="text-sm text-neutral">Inactive</span>
               </label>
             </div>
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-300">
-              Start Date
+            <label className="block text-sm font-semibold text-neutral mb-2">
+              Start Date (optional)
             </label>
             <div className="flex items-center gap-2">
               <input
                 type="date"
-                className="w-full border border-gray-600 bg-gray-700 text-white rounded px-3 py-2"
+                className="w-full px-4 py-3 border border-neutral-light rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
               />
@@ -143,7 +149,7 @@ export default function EditBudget({ budget, onClose, setBudget, setBudgets }) {
                 <button
                   type="button"
                   onClick={() => setStartDate("")}
-                  className="text-sm text-red-400 hover:underline"
+                  className="text-sm text-error hover:text-error/80 font-semibold px-2"
                 >
                   ✕
                 </button>
@@ -152,13 +158,13 @@ export default function EditBudget({ budget, onClose, setBudget, setBudgets }) {
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-300">
-              End Date
+            <label className="block text-sm font-semibold text-neutral mb-2">
+              End Date (optional)
             </label>
             <div className="flex items-center gap-2">
               <input
                 type="date"
-                className="w-full border border-gray-600 bg-gray-700 text-white rounded px-3 py-2"
+                className="w-full px-4 py-3 border border-neutral-light rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
               />
@@ -166,7 +172,7 @@ export default function EditBudget({ budget, onClose, setBudget, setBudgets }) {
                 <button
                   type="button"
                   onClick={() => setEndDate("")}
-                  className="text-sm text-red-400 hover:underline"
+                  className="text-sm text-error hover:text-error/80 font-semibold px-2"
                 >
                   ✕
                 </button>
@@ -174,42 +180,44 @@ export default function EditBudget({ budget, onClose, setBudget, setBudgets }) {
             </div>
           </div>
 
-          <div className="flex justify-between pt-4">
-            {!confirmingDelete ? (
-              <button
-                type="button"
-                onClick={() => setConfirmingDelete(true)}
-                className="text-sm text-red-500 hover:underline"
-                disabled={loading}
-              >
-                Delete
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={handleDelete}
-                className="text-sm text-red-600 font-semibold hover:underline"
-                disabled={loading}
-              >
-                Confirm Delete
-              </button>
-            )}
-
-            <div className="flex gap-2">
+          <div className="space-y-4 pt-6">
+            <div className="flex gap-3">
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 rounded bg-gray-600 hover:bg-gray-500 text-white text-sm"
+                className="flex-1 px-6 py-3 rounded-xl bg-neutral-light hover:bg-neutral-light/70 text-neutral font-semibold transition-colors duration-200"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 rounded bg-indigo-600 hover:bg-indigo-700 text-white text-sm"
+                className="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-primary to-accent text-light font-semibold shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105"
                 disabled={loading}
               >
-                {loading ? "Saving..." : "Save"}
+                {loading ? "Updating..." : "Update Budget"}
               </button>
+            </div>
+
+            <div className="flex justify-center">
+              {!confirmingDelete ? (
+                <button
+                  type="button"
+                  onClick={() => setConfirmingDelete(true)}
+                  className="text-sm text-error hover:text-error/80 underline font-semibold"
+                  disabled={loading}
+                >
+                  Delete Budget
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleDelete}
+                  className="px-4 py-2 rounded-xl bg-error hover:bg-error/90 text-light text-sm font-semibold transition-colors duration-200"
+                  disabled={loading}
+                >
+                  {loading ? "Deleting..." : "Confirm Delete"}
+                </button>
+              )}
             </div>
           </div>
         </form>

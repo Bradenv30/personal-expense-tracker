@@ -56,13 +56,12 @@ export default function SubBudgets({ expenses, budget }) {
       .filter((e) => e.type === type)
       .reduce((sum, e) => sum + parseFloat(e.amount), 0);
 
-  // If hidden, only render the toggle button
   if (!showGoals) {
     return (
-      <div className="p-4">
+      <div>
         <button
           onClick={() => setShowGoals(true)}
-          className="text-sm font-semibold text-dartmouth hover:underline"
+          className="text-sm font-semibold text-secondary hover:underline"
         >
           + Show Category Goals
         </button>
@@ -70,17 +69,18 @@ export default function SubBudgets({ expenses, budget }) {
     );
   }
 
-  // Full box when expanded
   return (
-    <div className="p-4 flex flex-col bg-pastelgray rounded shadow h-[350px]">
+    <div className="flex flex-col h-[350px]">
       <div className="flex justify-between items-center mb-4 flex-wrap gap-2">
-        <h2 className="text-xl font-semibold mr-4">Category Goals</h2>
+        <h2 className="text-xl font-semibold mr-4 bg-secondary/80 text-transparent bg-clip-text">
+          Category Goals
+        </h2>
 
         <div className="flex gap-2 flex-wrap items-center">
           <select
             value={selectedType}
             onChange={(e) => setSelectedType(e.target.value)}
-            className="px-3 py-2 rounded-md bg-vanillaice text-black text-sm shadow-sm focus:outline-none"
+            className="px-3 py-2 rounded-md bg-surface-light border border-neutral-light text-neutral text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
           >
             <option value="">Select Type</option>
             {types
@@ -97,12 +97,12 @@ export default function SubBudgets({ expenses, budget }) {
             placeholder="Enter goal"
             value={goalAmount}
             onChange={(e) => setGoalAmount(e.target.value)}
-            className="px-3 py-2 rounded-md bg-white text-sm border shadow-sm focus:outline-none"
+            className="px-3 py-2 rounded-md bg-surface-light text-sm border border-neutral-light text-neutral shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
           />
 
           <button
             onClick={handleAddGoal}
-            className="bg-dartmouth text-white px-4 py-2 rounded-md text-sm font-semibold shadow hover:bg-green-700 transition"
+            className="bg-gradient-to-r from-primary to-accent text-white px-4 py-2 rounded-xl text-sm font-semibold shadow hover:from-primary/90 hover:to-accent/90 transition-all duration-200"
           >
             Add
           </button>
@@ -110,43 +110,66 @@ export default function SubBudgets({ expenses, budget }) {
 
         <button
           onClick={() => setShowGoals(false)}
-          className="text-sm font-semibold text-red-600 hover:underline ml-auto"
+          className="text-sm font-semibold text-neutral hover:underline ml-auto"
         >
           Hide
         </button>
       </div>
 
-      <div className="pr-1 flex-1">
+      <div className="flex-1">
         {goals.length === 0 ? (
-          <p className="text-gray-500">No goals added yet.</p>
+          <p className="text-neutral">No goals added yet.</p>
         ) : (
-          <ul className="space-y-2">
-            {goals.map((goal) => {
+          <div className="space-y-0">
+            {goals.map((goal, index) => {
               const spent = getTotalForType(goal.type);
               return (
-                <li
+                <div
                   key={goal.id}
-                  className="bg-white rounded-md p-4 shadow-sm text-black"
+                  className={`py-4 text-neutral ${
+                    index < goals.length - 1
+                      ? "border-b border-neutral-light"
+                      : ""
+                  }`}
                 >
-                  <div className="flex items-center justify-between gap-4">
-                    <p className="text-sm font-semibold whitespace-nowrap">
+                  <div className="flex items-center justify-between gap-4 flex-wrap">
+                    {/* Category + Limit */}
+                    <p className="text-sm font-semibold min-w-[160px]">
                       {goal.type}: Limit – ${goal.goal}
                     </p>
-                    <p className="text-sm text-black whitespace-nowrap text-right w-36">
-                      ${spent.toFixed(2)} / ${goal.goal}
+
+                    {/* Spent Info */}
+                    <p className="text-sm text-neutral whitespace-nowrap min-w-[200px]">
+                      Spent:{" "}
+                      <span className="font-semibold text-dartmouth">
+                        ${spent.toFixed(2)}
+                      </span>{" "}
+                      / ${goal.goal} limit
                     </p>
+
+                    {/* Over/Under Message */}
+                    <p
+                      className={`text-sm font-medium whitespace-nowrap min-w-[190px] ${
+                        spent > goal.goal ? "text-error" : "text-success"
+                      }`}
+                    >
+                      You are ${Math.abs(spent - goal.goal).toFixed(2)}{" "}
+                      {spent > goal.goal ? "over" : "under"} your limit!
+                    </p>
+
+                    {/* Delete Button */}
                     <button
                       onClick={() => handleRemoveGoal(goal.id)}
-                      className="text-red-600 text-lg font-bold px-2 hover:text-red-800 transition"
+                      className="text-error text-lg font-bold px-2 hover:text-error/80 transition"
                       aria-label={`Remove ${goal.type} goal`}
                     >
                       ×
                     </button>
                   </div>
-                </li>
+                </div>
               );
             })}
-          </ul>
+          </div>
         )}
       </div>
     </div>
