@@ -11,7 +11,15 @@ export default function SubBudgets({ expenses, budget }) {
   const [goalAmount, setGoalAmount] = useState("");
   const [showGoals, setShowGoals] = useState(true);
 
-  const types = [...new Set(expenses.map((e) => e.type).filter(Boolean))];
+  const types = [
+    "Food",
+    "Transportation",
+    "Subscription",
+    "Entertainment",
+    "Bills/Utilities",
+    "Groceries/Necessities",
+    "Vacation",
+  ];
 
   useEffect(() => {
     if (budget?.id) {

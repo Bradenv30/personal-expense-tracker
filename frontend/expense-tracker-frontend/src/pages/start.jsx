@@ -7,7 +7,6 @@ function Start() {
   const navigate = useNavigate();
 
   const [confirmPassword, setConfirmPassword] = useState("");
-
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
   const [username, setUsername] = useState("");
@@ -63,7 +62,7 @@ function Start() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-secondary bg-cover bg-center bg-fixed w-full">
+    <div className="min-h-screen flex items-center justify-center bg-secondary-start bg-cover bg-center bg-fixed w-full overflow-hidden">
       <img
         src={logo}
         alt="SimplySpent Logo"
