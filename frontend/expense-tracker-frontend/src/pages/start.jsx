@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/logo.svg";
+import simplySpent from "../assets/SimplySpentLogo.svg";
 import { userLogin, userRegister } from "../api/auth";
 
 function Start() {
@@ -62,9 +63,9 @@ function Start() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-secondary-start bg-cover bg-center bg-fixed w-full overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center bg-amber-50 bg-cover bg-center bg-fixed w-full overflow-hidden">
       <img
-        src={logo}
+        src={simplySpent}
         alt="SimplySpent Logo"
         className="absolute -top-24 left-12 w-[28rem] h-[28rem] md:w-[32rem] md:h-[32rem] opacity-90"
       />
