@@ -51,7 +51,7 @@ export default function TopBar({
             <button
               onClick={onReportClick}
               disabled={isReportsDisabled}
-              className={`text-sm sm:text-base lg:text-lg px-3 sm:px-4 lg:px-5 py-2 sm:py-2.5 rounded-xl font-semibold shadow-lg transition duration-200 ${
+              className={`text-lg px-5 py-2.5 rounded-xl font-semibold shadow-lg transition duration-200 ${
                 isReportsDisabled
                   ? "bg-neutral-light/50 text-neutral/50 cursor-not-allowed"
                   : "bg-secondary/80 hover:bg-secondary/60 active:scale-95 transform text-white"
