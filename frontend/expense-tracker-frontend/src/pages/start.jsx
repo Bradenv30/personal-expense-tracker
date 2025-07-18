@@ -67,7 +67,7 @@ function Start() {
       <img
         src={simplySpent}
         alt="SimplySpent Logo"
-        className="absolute -top-24 left-12 w-[28rem] h-[28rem] md:w-[32rem] md:h-[32rem] opacity-90"
+        className="absolute -top-32 left-8 w-[28rem] h-[28rem] md:w-[32rem] md:h-[32rem] opacity-90"
       />
 
       {/* main landing card - keeps things contained and clean, responsive width for card */}
