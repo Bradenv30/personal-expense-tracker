@@ -12,7 +12,9 @@ from model import db, User, Expenses, Budget, CategoryGoal
 app = Flask(__name__)
 app.config.from_object(Config)
 #Had to change to allow cross server requests
-CORS(app, origins=["http://localhost:5173"], supports_credentials=True)
+CORS(app, origins=["http://localhost:5173",
+                   "https://simply-spent.vercel.app"], 
+     supports_credentials=True)
 
 db.init_app(app)
 migrate = Migrate(app, db)
